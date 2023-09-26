@@ -7,10 +7,10 @@ from firebase_admin import credentials
 from firebase_admin import db
 from firebase_admin import  storage
 
-cred = credentials.Certificate("serviceAccountKey.json")
+cred = credentials.Certificate("face-10f0a-firebase-adminsdk-jocqe-1cef07edc2.json")
 firebase_admin.initialize_app(cred, {
-    'databaseURL': "",
-    'storageBucket': ""
+    'databaseURL': "https://face-10f0a-default-rtdb.asia-southeast1.firebasedatabase.app",
+    'storageBucket': "face-10f0a.appspot.com"
 })
 
 
@@ -39,10 +39,13 @@ def findEncodings(imagesList):
     encodeList = []
     for img in imagesList:
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        encode = face_recognition.face_encodings(img)[0]
-        encodeList.append(encode)
-
+        face_encodings = face_recognition.face_encodings(img)
+        if face_encodings:
+            encode = face_encodings[0]
+            encodeList.append(encode)
     return encodeList
+
+
 
 
 print("Encoding Started ...")
