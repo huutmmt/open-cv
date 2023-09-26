@@ -1,0 +1,5 @@
+os-sys
+cvzone
+face_recognition
+firebase_admin
+numpy
