@@ -25,15 +25,16 @@ cap.set(4, 480)
 
 imgBackground = cv2.imread('Resources/background.png')
 
-# Importing the mode images into a list
+# Nhập hình ảnh chế độ vào danh sách
 folderModePath = 'Resources/Modes'
 modePathList = os.listdir(folderModePath)
 imgModeList = []
 for path in modePathList:
     imgModeList.append(cv2.imread(os.path.join(folderModePath, path)))
+
 # print(len(imgModeList))
 
-# Load the encoding file
+# Tải file mã hóa
 print("Loading Encode File ...")
 file = open('EncodeFile.p', 'rb')
 encodeListKnownWithIds = pickle.load(file)
@@ -67,6 +68,7 @@ while True:
             # print("faceDis", faceDis)
 
             matchIndex = np.argmin(faceDis)
+            #xác định xem khuôn mặt được phát hiện thuộc về người đã biết nào trong danh sách và để tiến hành việc nhận diện.
             # print("Match Index", matchIndex)
 
             if matches[matchIndex]:
@@ -78,7 +80,7 @@ while True:
                 imgBackground = cvzone.cornerRect(imgBackground, bbox, rt=0)
                 id = studentIds[matchIndex]
                 if counter == 0:
-                    cvzone.putTextRect(imgBackground, "Loading", (275, 400))
+                    cvzone.putTextRect(imgBackground, "Dang chay", (275, 400))
                     cv2.imshow("Face Attendance", imgBackground)
                     cv2.waitKey(1)
                     counter = 1
@@ -87,24 +89,24 @@ while True:
         if counter != 0:
 
             if counter == 1:
-                # Get the Data
+                # Lấy data id
                 studentInfo = db.reference(f'Students/{id}').get()
                 print(studentInfo)
-                # Get the Image from the storage
+                # lấy ảnh dựa trê data id
                 blob = bucket.get_blob(f'Images/{id}.png')
-                array = np.frombuffer(blob.download_as_string(), np.uint8)
-                imgStudent = cv2.imdecode(array, cv2.COLOR_BGRA2BGR)
-                # Update data of attendance
+                array = np.frombuffer(blob.download_as_string(), np.uint8)#đổi dữ liệu hình ảnh từ định dạng chuỗi thành mảng số nguyên 8-bit 
+                imgStudent = cv2.imdecode(array, cv2.COLOR_BGRA2BGR)#một hình ảnh của sinh viên được lưu trong biến
+                # Cập nhật số lần điểm danh và thời gian
                 datetimeObject = datetime.strptime(studentInfo['last_attendance_time'],
                                                    "%Y-%m-%d %H:%M:%S")
                 secondsElapsed = (datetime.now() - datetimeObject).total_seconds()
                 print(secondsElapsed)
-                if secondsElapsed > 30:
+                if secondsElapsed > 30:#Nếu thời gian đã trôi qua lớn hơn 30 giây
                     ref = db.reference(f'Students/{id}')
                     studentInfo['total_attendance'] += 1
                     ref.child('total_attendance').set(studentInfo['total_attendance'])
                     ref.child('last_attendance_time').set(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-                else:
+                else:#ít hơn hoặc bằng 30 giây
                     modeType = 3
                     counter = 0
                     imgBackground[44:44 + 633, 808:808 + 414] = imgModeList[modeType]

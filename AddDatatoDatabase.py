@@ -12,8 +12,8 @@ ref = db.reference('Students')
 data = {
     "123321":
         {
-            "name": "Nguyễn Anh Tùng",
-            "major": "Lập Trình Viên",
+            "name": "Nguyen Anh Tung",
+            "major": "Full Stack",
             "starting_year": 2020,
             "total_attendance": 7,
             "standing": "G",
@@ -22,8 +22,8 @@ data = {
         },
     "235432":
         {
-            "name": "Đỗ Ngọc Hữu",
-            "major": "Trưởng phòng",
+            "name": "Do Ngoc Huu",
+            "major": "Shark",
             "starting_year": 2021,
             "total_attendance": 12,
             "standing": "B",
@@ -32,8 +32,8 @@ data = {
         },
     "963852":
         {
-            "name": "Nguyễn Thị Khoa",
-            "major": "cơ phó",
+            "name": "Nguyen Thi Khoa",
+            "major": "Back-end",
             "starting_year": 2020,
             "total_attendance": 7,
             "standing": "G",
